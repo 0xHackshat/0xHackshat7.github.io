@@ -21,6 +21,116 @@ document.addEventListener('DOMContentLoaded', function () {
   }
   updateInteractiveElements();
 
+
+
+
+    // --- Quote → ASCII → Terminal Sequence ---
+  const quotes = [
+  "Ransomware attacks are not only increasing in scale and frequency, but also sophistication. — Roger Spitz",
+  "The internet doesn’t forget, because forgetting isn’t profitable. — Timsux Wales",
+  "A successful hacking methodology is built on accumulated experience with diverse techniques, explored creatively. — Timsux Wales",
+  "Nothing can be hacked without connectivity, even your heart. — Avin29feb",
+  "Collecting intelligence and understanding an adversary's motivations is fundamental to cybersecurity. — Dmitri Alperovitch",
+  "Agentic AI in security is like a seasoned chess grandmaster, anticipating threats before they unfold. — Jason Hishmeh",
+  "Like a lighthouse in a restless sea, cybersecurity shines not by predicting storms, but by facing the unexpected. — Stephane Nappo",
+  "Security doesn’t start with detection, it begins with design. — Timsux Wales",
+  "Security is an outcome of thoughtful design, not a product you install or a checklist you complete. — Timsux Wales",
+  "Security is a people problem wearing a technical costume. — Timsux Wales",
+  "Security doesn’t exist in a vacuum, it lives in the context of money, risk, and reputation. — Timsux Wales",
+  "Cybersecurity will not be saved by corporate decorum. It will be saved by those willing to fail forward and defend relentlessly. — Ludmila Morozova-Buss",
+  "Hackers have underground forums. We have NDAs, corporate decorum... and a false sense of security. — Ludmila Morozova-Buss",
+  "There is no perfect security, only maximum temporary security. — Gun Gun Febrianza",
+  "In the cybersecurity industry, you can pray for peace, but never stop entertaining chaos. — Timsux Wales",
+  "In our shared digital future, hacking and cybersecurity can no longer exist in a black box. — Laura S. Scherling",
+  "It may take legions of cybersecurity advocates before awareness is truly baked into daily routines. — Laura S. Scherling",
+  "The much-lamented 'cybersecurity skills gap' is a myth. The real disease is a leadership gap. — Ludmila Morozova-Buss",
+  "Cybersecurity's greatest failure is a leadership gap, not a skills gap. — Ludmila Morozova-Buss",
+  "Social engineering succeeds only if defaults fire unchallenged. Whoever engineers the situation engineers the outcome. — Timsux Wales"
+];
+
+
+  const quoteContainer = document.getElementById("quote-container");
+  const heroImage = new Image();
+  heroImage.crossOrigin = "Anonymous";
+  heroImage.src = document.getElementById("hero-img").src;
+
+  // Terminal card (the bottom fake terminal in hero)
+  const terminalCard = document.querySelector(
+    "#hero .absolute.bottom-8"
+  );
+  // terminalCard.style.opacity = "0"; // hide initially
+  // terminalCard.style.transform = "translateY(30px)";
+  // terminalCard.style.transition = "all 1s ease-in-out";
+
+  // 1) Show random quote
+  const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
+  quoteContainer.textContent = randomQuote;
+  quoteContainer.classList.add("opacity-100");
+
+  function loadAsciiFile(url) {
+  fetch(url)
+    .then(res => res.text())
+    .then(text => {
+      // Convert ANSI-style codes to HTML
+      let parsed = text
+        .replace(/%clr/g, "</span>")
+        .replace(/%whi/g, "<span style='color:white'>")
+        .replace(/%dyel/g, "<span style='color:yellow'>")
+        .replace(/%bld/g, "<span style='font-weight:bold'>")
+        .replace(/%blk/g, "<span style='color:black'>");
+
+      // Split into lines
+      let lines = parsed.split("\n");
+      let container = document.getElementById("ascii-file-output");
+      container.innerHTML = "";
+
+      let i = 0;
+      function showLine() {
+        if (i < lines.length) {
+          container.innerHTML += lines[i] + "\n";
+          i++;
+          setTimeout(showLine, 50); // typing speed (ms per line)
+        } else {
+          // Once finished, fade out ASCII
+          setTimeout(() => {
+            container.style.transition = "opacity 1s";
+            container.style.opacity = "0";
+          }, 1000); // wait 1s before hiding
+        }
+      }
+      showLine();
+    })
+    .catch(err => console.error("Error loading ASCII file:", err));
+}
+
+
+
+  // 2) After 3s, fade out quote and start ASCII
+  setTimeout(() => {
+  // Fade out quote
+  quoteContainer.classList.remove("opacity-100");
+  quoteContainer.classList.add("opacity-0");
+
+  setTimeout(() => {
+    // Start ASCII rendering in the background canvas
+    heroImage.onload = () => {
+      initParticles(heroImage);
+      animate();
+    };
+
+    // Show terminal at the same time
+    terminalCard.style.opacity = "1";
+    terminalCard.style.transform = "translateY(0)";
+
+    // ✅ Load ASCII file into fake terminal
+    loadAsciiFile("aperture-science-01.txt");
+
+  }, 100); // delay after quote disappears
+
+}, 5000); // how long the quote stays visible
+
+
+
   // --- Typewriter Effect ---
   const typewriterElement = document.getElementById('typewriter');
   const roles = [
@@ -218,7 +328,7 @@ document.addEventListener('DOMContentLoaded', function () {
   //   animate();
   // };
 
-  const heroImage = new Image();
+  // const heroImage = new Image();
   heroImage.crossOrigin = 'Anonymous';
   heroImage.src = document.getElementById('hero-img').src;
   heroImage.onload = () => {
@@ -478,3 +588,5 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   });
 });
+
+

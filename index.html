@@ -43,6 +43,12 @@
 
     <!-- Hero Section -->
     <section id="hero" class="h-screen relative overflow-hidden">
+        <!-- Random Quote -->
+        <div id="quote-container"
+            class="absolute inset-0 flex items-center justify-center text-center text-white text-2xl md:text-4xl font-mono z-20 px-6 opacity-0 transition-opacity duration-1000">
+        </div>
+
+
         <!-- Canvas Background -->
         <canvas id="hero-canvas" class="absolute top-0 left-0 w-full h-full z-0"></canvas>
 
@@ -55,7 +61,7 @@
 
 
         <!-- Fake Terminal Card -->
-        <div class="absolute bottom-8 left-8 w-[420px] bg-[#0d1117] border border-gray-700 rounded-xl shadow-2xl z-10">
+        <div class="absolute bottom-8 left-8 h-[500px] w-[550px] bg-[#0d1117] border border-gray-700 rounded-xl shadow-2xl z-10">
             <!-- Fake Window Bar -->
             <div class="flex items-center gap-2 px-3 py-2 border-b border-gray-700 bg-[#161b22] rounded-t-xl">
                 <span class="w-3 h-3 rounded-full bg-red-500"></span>
@@ -63,12 +69,13 @@
                 <span class="w-3 h-3 rounded-full bg-green-500"></span>
                 <span class="ml-4 text-gray-400 text-sm font-mono">terminal</span>
             </div>
-
+             
+            
             <!-- Terminal Content -->
             <div class="p-4 font-mono text-green-400 text-sm leading-relaxed">
                 <p>$ Hello, I am <span class="text-accent">Akshat Shirsat</span></p>
                 <p>$ I am a <span id="typewriter"></span><span class="typewriter-cursor">|</span></p>
-                <p>$ View my work 👇</p>
+                <p>$ Scrole down to view my Work 👇</p>
             </div>
         </div>
     </section>

@@ -127,7 +127,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   }, 100); // delay after quote disappears
 
-}, 5000); // how long the quote stays visible
+}, 3000); // how long the quote stays visible
 
 
 
@@ -381,7 +381,7 @@ document.addEventListener('DOMContentLoaded', function () {
     {
     id: 0,
     title: "Blockchain Framework for Web3 Transactions",
-    category: ">Projects",
+    category: "project",
     description:
       "A peer-to-peer blockchain network of 15 devices running PoW algorithms and consensus mechanisms, integrating smart contracts and secure transaction flows that improved transaction security & anonymity by using cryptography, hashing, and digital signatures.",
     tech: ["Python", "Cryptography", "Hashing", "Digital Signatures"],
@@ -400,7 +400,7 @@ document.addEventListener('DOMContentLoaded', function () {
   {
     id: 1,
     title: "Web Application SQL Injection Scanner",
-    category: ">Projects",
+    category: "project",
     description:
       "Developed a Python-based scanner that identifies vulnerabilities in URLs and HTML forms by detecting unsafe input parameters and SQL injection possibilities.",
     tech: ["Python", "Requests", "Regex"],
@@ -419,7 +419,7 @@ document.addEventListener('DOMContentLoaded', function () {
   {
     id: 2,
     title: "Network Tracking & Visualization",
-    category: ">Projects",
+    category: "project",
     description:
       "A system integrating Wireshark with Python & Google Earth to monitor network traffic, detect anomalies, and visualize IP geolocation.",
     tech: ["Wireshark", "Python", "Google Earth"],
@@ -435,6 +435,21 @@ document.addEventListener('DOMContentLoaded', function () {
     </div>`,
     link: "https://github.com/kingakshat/Wireshark-Python-Network-Traffic-Visualization"
   },
+
+  {
+  id: 3,
+  title: "Solar System Overview CTF Write-Up",
+  category: "ctf",
+  description: "A web exploitation challenge involving SQL injection via an API endpoint, leading to unauthorized data access.",
+  tech: ["Web Exploitation", "SQL Injection", "API Security", "Penetration Testing"],
+  features: [
+    "Identified an API endpoint vulnerable to SQL injection",
+    "Exploited the vulnerability to enumerate database tables and columns",
+    "Extracted sensitive data, including a flag, from the database"
+  ],
+  snippet: `<img src="https://raw.githubusercontent.com/0xHackshat/0xHackshat7.github.io/refs/heads/main/images/ascii_crop_3.jpg" alt="Solar System CTF Overview" class="rounded-lg w-full" />`,
+  link: "https://medium.com/@akshatshirsat77/why-ctf-2025-challenge-write-up-solar-system-overview-8b92ee94feb6"
+}
 
 
 
@@ -590,46 +605,242 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 
-document.addEventListener("DOMContentLoaded", () => {
-  const ctx = document.getElementById("skillsRadar");
 
-  if (ctx) {
-    new Chart(ctx, {
-      type: "radar",
-      data: {
-        labels: [
-          "Python & Bash Scripting", "Linux", "Networking", "AWS Cloud", "Rest API", "SQL",
-          "Nmap", "Wireshark", "Burp Suite", "Splunk", "Qualys", "Postman", "Django", "Flask",
-          "Vulnerability Assessment", "Risk & Threat Analytics", "Incident Response", "Automation"
-        ],
-        datasets: [{
-          label: "Skill Level",
-          data: [90, 85, 80, 75, 70, 75, 85, 80, 80, 75, 70, 70, 65, 65, 90, 85, 80, 75], // example values
-          backgroundColor: "rgba(34, 197, 94, 0.2)",  // green-400 with opacity
-          borderColor: "#22c55e",
-          pointBackgroundColor: "#22c55e",
-          pointBorderColor: "#fff",
-          pointHoverBackgroundColor: "#fff",
-          pointHoverBorderColor: "#22c55e"
-        }]
+
+document.addEventListener("DOMContentLoaded", () => {
+  const canvas = document.getElementById("skillsRadar");
+  if (!canvas) return;
+  const ctx2d = canvas.getContext("2d");
+
+  // ----- CONFIG: tweak these to taste -----
+  const START_ANGLE = -Math.PI / 2; // where label 0 starts (top)
+  const HIT_RING_TOLERANCE = 60;    // px tolerance from outer ring
+  const CORNER_TOLERANCE = 36;      // px tolerance around the corner point
+  const LABEL_RADIUS_OFFSET = 18;   // how far outside the polygon the corner labels sit
+
+  // fonts (change sizes here)
+  const cornerLabelFont = "600 16px 'Fira Code', monospace";
+  const cornerLabelColor = "#E5E7EB";
+  const cornerLabelHoverColor = "#22c55e";
+
+  const centerBoxTitleFont = "700 16px 'Fira Code', monospace";
+  const centerBoxSkillFont = "12px 'Fira Code', monospace";
+  const centerBoxBg = "rgba(2,6,23,0.78)";
+  // -----------------------------------------
+
+  const subSkills = {
+    "Programming & Scripting": ["Python", "Bash", "Django", "Flask", "Automation"],
+    "Cyber Security & Analytics": ["Incident Response", "Risk & Threat Analytics"],
+    "Security Tools & Assessment": ["Burp Suite", "Qualys", "Vulnerability Assessment"],
+    "OS & Networking": ["Linux", "Networking", "Nmap", "Wireshark"],
+    "Cloud & APIs": ["AWS Cloud", "REST API", "Postman"],
+    "DB's & Data Handling": ["MS SQL", "Oracle SQL", "ETL"]
+  };
+
+  const labels = Object.keys(subSkills);
+  const values = [75, 80, 70, 65, 85, 78]; // example values (0-100)
+
+  // MAIN chart
+  const chart = new Chart(ctx2d, {
+    type: "radar",
+    data: {
+      labels,
+      datasets: [{
+        label: "Skill Level",
+        data: values,
+        backgroundColor: "rgba(34,197,94,0.18)",
+        borderColor: "#22c55e",
+        borderWidth: 2,
+        pointBackgroundColor: "#22c55e",
+        pointBorderColor: "#fff",
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      layout: {
+        // increase padding so corner labels don't get clipped
+        padding: { top: 20, right: 80, bottom: 20, left: 120 }
       },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        scales: {
-          r: {
-            angleLines: { color: "#374151" },
-            grid: { color: "#374151" },
-            suggestedMin: 0,
-            suggestedMax: 100,
-            ticks: { stepSize: 20, color: "#9CA3AF" },
-            pointLabels: { color: "#E5E7EB", font: { size: 12 } }
+      scales: {
+        r: {
+          startAngle: START_ANGLE,
+          angleLines: { color: "#374151" },
+          grid: { color: "#374151" },
+          suggestedMin: 0,
+          suggestedMax: 100,
+          ticks: { display: false },       // hide numeric tick labels
+          pointLabels: { display: false }  // we draw labels ourselves at corners
+        }
+      },
+      plugins: {
+        legend: { display: false },
+        tooltip: { enabled: false } // we draw our own center box
+      }
+    },
+
+    // plugin handles corner labels, hit-detection & center info box
+    plugins: [{
+      id: "cornerHoverAndLabels",
+
+      afterEvent(chart, args) {
+        const e = args.event;
+        if (!e) return;
+
+        // clear on leave
+        if (e.type === "mouseout" || e.type === "mouseleave") {
+          if (chart._hoveredLabelIndex != null) {
+            chart._hoveredLabelIndex = null;
+            chart.draw();
           }
-        },
-        plugins: {
-          legend: { display: false }
+          return;
+        }
+
+        const r = chart.scales.r;
+        const cx = r.xCenter;
+        const cy = r.yCenter;
+        const mx = e.x;
+        const my = e.y;
+        const dx = mx - cx;
+        const dy = my - cy;
+        const mouseDist = Math.hypot(dx, dy);
+
+        const N = chart.data.labels.length;
+        const TWO_PI = Math.PI * 2;
+        const sector = TWO_PI / N;
+
+        // angle of mouse relative to +X
+        let mouseAngle = Math.atan2(dy, dx);
+        // normalize relative to START_ANGLE
+        let rel = mouseAngle - START_ANGLE;
+        rel = ((rel % TWO_PI) + TWO_PI) % TWO_PI;
+        let approxIdx = Math.round(rel / sector) % N;
+
+        // compute the corner position for approxIdx
+        const angleForIdx = START_ANGLE + approxIdx * sector;
+        const cornerX = cx + Math.cos(angleForIdx) * (r.drawingArea + LABEL_RADIUS_OFFSET);
+        const cornerY = cy + Math.sin(angleForIdx) * (r.drawingArea + LABEL_RADIUS_OFFSET);
+        const distToCorner = Math.hypot(mx - cornerX, my - cornerY);
+
+        let found = null;
+        // prefer exact corner proximity
+        if (distToCorner <= CORNER_TOLERANCE) {
+          found = approxIdx;
+        } else {
+          // fallback: if mouse is roughly on the outer ring (where labels sit), allow hit
+          if (Math.abs(mouseDist - r.drawingArea) <= HIT_RING_TOLERANCE) {
+            found = approxIdx;
+          }
+        }
+
+        if (chart._hoveredLabelIndex !== found) {
+          chart._hoveredLabelIndex = found;
+          chart.draw();
+        }
+      },
+
+      afterDraw(chart) {
+        const ctx = chart.ctx;
+        const r = chart.scales.r;
+        const cx = r.xCenter;
+        const cy = r.yCenter;
+        const N = chart.data.labels.length;
+        const TWO_PI = Math.PI * 2;
+        const sector = TWO_PI / N;
+
+        // DRAW corner labels
+        ctx.save();
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+
+        for (let i = 0; i < N; i++) {
+          const angle = START_ANGLE + i * sector;
+          const x = cx + Math.cos(angle) * (r.drawingArea + LABEL_RADIUS_OFFSET);
+          const y = cy + Math.sin(angle) * (r.drawingArea + LABEL_RADIUS_OFFSET);
+
+          // hover highlight
+          if (chart._hoveredLabelIndex === i) {
+            ctx.fillStyle = cornerLabelHoverColor;
+            ctx.font = cornerLabelFont.replace(/\d+px/, match => {
+              // increase hovered font slightly
+              const size = parseInt(match) + 2;
+              return `${size}px`;
+            });
+          } else {
+            ctx.fillStyle = cornerLabelColor;
+            ctx.font = cornerLabelFont;
+          }
+
+          // draw (single-line) label. If labels are long, you can wrap manually.
+          ctx.fillText(chart.data.labels[i], x, y);
+        }
+        ctx.restore();
+
+        // DRAW center info box only if hovered
+        const idx = chart._hoveredLabelIndex;
+        if (idx == null) return;
+
+        const label = chart.data.labels[idx];
+        const skills = subSkills[label] || [];
+
+        ctx.save();
+
+        // measure width dynamically
+        ctx.font = centerBoxTitleFont;
+        const titleWidth = ctx.measureText(label).width;
+        ctx.font = centerBoxSkillFont;
+        const skillsWidths = skills.map(s => ctx.measureText(s).width);
+        const maxTextWidth = Math.max(titleWidth, ...skillsWidths, 60);
+
+        const padX = 16;
+        const padY = 12;
+        const lineHeight = 18;
+        const boxWidth = Math.min(Math.max(200, maxTextWidth + padX * 2), 420);
+        const boxHeight = padY * 2 + lineHeight * (1 + skills.length);
+
+        const boxX = cx - boxWidth / 2;
+        const boxY = cy - boxHeight / 2;
+
+        // background rounded rect
+        ctx.fillStyle = centerBoxBg;
+        roundRect(ctx, boxX, boxY, boxWidth, boxHeight, 8, true, false);
+
+        // title
+        ctx.fillStyle = "#E5E7EB";
+        ctx.font = centerBoxTitleFont;
+        ctx.textAlign = "center";
+        ctx.textBaseline = "top";
+        ctx.fillText(label, cx, boxY + padY);
+
+        // skill lines
+        ctx.fillStyle = "#9CA3AF";
+        ctx.font = centerBoxSkillFont;
+        skills.forEach((s, i) => {
+          ctx.fillText(s, cx, boxY + padY + lineHeight * (i + 1));
+        });
+
+        ctx.restore();
+
+        // helper for rounded rect
+        function roundRect(ctx, x, y, w, h, r, fill, stroke) {
+          if (typeof r === "undefined") r = 5;
+          ctx.beginPath();
+          ctx.moveTo(x + r, y);
+          ctx.arcTo(x + w, y, x + w, y + h, r);
+          ctx.arcTo(x + w, y + h, x, y + h, r);
+          ctx.arcTo(x, y + h, x, y, r);
+          ctx.arcTo(x, y, x + w, y, r);
+          ctx.closePath();
+          if (fill) ctx.fill();
+          if (stroke) ctx.stroke();
         }
       }
-    });
-  }
+    }] // end plugins
+  });
+
+  // Expose for debug
+  window._skillRadarChart = chart;
+
+  // Quick tips printed to console
+  console.log("Skill radar loaded. To change corner label font size, edit `cornerLabelFont` variable in the script.");
 });
